@@ -12,7 +12,7 @@
 
 //  todo: finish read mem, start anyting related to changing mem contents
 
-var DEBUG = 0; // 1 if debugging, 0 if not
+var DEBUG = 1; // 1 if debugging, 0 if not
 
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
@@ -98,6 +98,7 @@ function RFID (hardware, options, callback) {
         });
       });
     }, WAKE_UP_TIME);
+
 
     // If we get a new listener
     self.on('newListener', function (event) {
@@ -318,9 +319,10 @@ RFID.prototype._read = function (cardBaudRate, callback) {
         }
       };
       // When the module is ready to respond
-      self.irq.once('low', function ready() {
+      self.irq.once('fall', function ready() {
         var dataLength = 32;
         // Read the card data
+        self.irq.removeAllListeners();
         self._wireReadData(dataLength, function (err, res) {
           if (!err && self._checkPacket(res)) {
             parseCard(err, res);
