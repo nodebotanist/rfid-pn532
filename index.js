@@ -49,10 +49,10 @@ function RFID (hardware, options, callback) {
 
   self.hardware = hardware;
   self.ready = false;
-  self.irq = hardware.digital[2];
+  self.irq = hardware.digital[1];
   self.irq.input();
 
-  self.nRST = hardware.digital[1];
+  self.nRST = hardware.digital[2];
 
   // Toggle reset every time we initialize
   self.nRST.write(false, function continueInit() {
@@ -433,7 +433,7 @@ RFID.prototype._sendCommandCheckAck = function (cmd, callback) {
 
   self._wireSendCommand(cmd, function (err, data) {
     if (DEBUG) {
-      console.log('kickback from readreg:\n', err, '\n', data);
+      console.log('kickback from readreg:\r\n', err, '\r\n', data);
     }
     if (err) {
       self.emit('error', new Error('Error reading register.'));
